@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CounterSlider"
-include(":app")
+include(":sample")
