@@ -230,12 +230,8 @@ private suspend fun handleHorizontalDrag(
     dragDirection.value =
         DragDirection.HORIZONTAL
 
-    // calculate the drag factor so the more the thumb
-    // is closer to the border, the more effort it takes to drag it
-    val dragFactor =
-        1 - (thumbOffsetX.value / dragLimitHorizontalPx).absoluteValue
     val delta =
-        pointerInputChange.positionChange().x * dragFactor
+        pointerInputChange.positionChange().x
 
     val targetValue = thumbOffsetX.value + delta
     val targetValueWithinBounds =
