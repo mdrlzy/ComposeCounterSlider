@@ -1,6 +1,5 @@
 package com.mdrlzy.counterslider
 
-import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.Spring
@@ -10,12 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -33,16 +30,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
-import com.mdrlzy.counterslider.COUNTER_DELAY_FAST_MS
-import com.mdrlzy.counterslider.COUNTER_DELAY_INITIAL_MS
-import com.mdrlzy.counterslider.DRAG_LIMIT_HORIZONTAL_DP
-import com.mdrlzy.counterslider.DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR
-import com.mdrlzy.counterslider.DRAG_LIMIT_VERTICAL_DP
-import com.mdrlzy.counterslider.DRAG_LIMIT_VERTICAL_THRESHOLD_FACTOR
-import com.mdrlzy.counterslider.DragDirection
-import com.mdrlzy.counterslider.START_DRAG_THRESHOLD_DP
-import com.mdrlzy.counterslider.dpToPx
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -53,6 +40,7 @@ import kotlin.math.sign
 
 @Composable
 internal fun DraggableThumbButton(
+    sliderSize: SliderSize,
     value: String,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
     thumbOffsetY: Animatable<Float, AnimationVector1D>,
@@ -62,9 +50,9 @@ internal fun DraggableThumbButton(
     onValueReset: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val dragLimitHorizontalPx = DRAG_LIMIT_HORIZONTAL_DP.dp.dpToPx()
-    val dragLimitVerticalPx = DRAG_LIMIT_VERTICAL_DP.dp.dpToPx()
-    val startDragThreshold = START_DRAG_THRESHOLD_DP.dp.dpToPx()
+    val dragLimitHorizontalPx = sliderSize.dragLimitHorizontalDp.dpToPx()
+    val dragLimitVerticalPx = sliderSize.dragLimitVerticalDp.dpToPx()
+    val startDragThreshold = sliderSize.startDragThresholdDp.dpToPx()
     val scope = rememberCoroutineScope()
 
     val dragDirection = remember {
@@ -81,8 +69,8 @@ internal fun DraggableThumbButton(
                     thumbOffsetY.value.toInt(),
                 )
             }
-            .shadow(8.dp, shape = CircleShape)
-            .size(64.dp)
+            .shadow(sliderSize.thumbButtonShadowElevationDp, shape = CircleShape)
+            .size(sliderSize.thumbButtonSizeDp)
             .clip(CircleShape)
             .clickable {
                 // only allow clicks while not dragging
@@ -124,7 +112,7 @@ internal fun DraggableThumbButton(
         Text(
             text = value,
             color = Color.White,
-            style = MaterialTheme.typography.headlineLarge,
+            fontSize = sliderSize.valueFontSizeSp,
             textAlign = TextAlign.Center,
         )
     }

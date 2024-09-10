@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
 import kotlin.math.absoluteValue
 
 @Composable
 internal fun ButtonContainer(
+    sliderSize: SliderSize,
     thumbOffsetX: Float,
     thumbOffsetY: Float,
     onValueDecreaseClick: () -> Unit,
@@ -31,8 +31,8 @@ internal fun ButtonContainer(
     clearButtonVisible: Boolean = false,
 ) {
     // at which point the icon should be fully visible
-    val horizontalHighlightLimitPx = DRAG_HORIZONTAL_ICON_HIGHLIGHT_LIMIT_DP.dp.dpToPx()
-    val verticalHighlightLimitPx = DRAG_VERTICAL_ICON_HIGHLIGHT_LIMIT_DP.dp.dpToPx()
+    val horizontalHighlightLimitPx = sliderSize.dragHorizontalIconHighlightDp.dpToPx()
+    val verticalHighlightLimitPx = sliderSize.dragVerticalIconHighlightDp.dpToPx()
 
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -45,7 +45,7 @@ internal fun ButtonContainer(
                 )
             }
             .fillMaxSize()
-            .clip(RoundedCornerShape(64.dp))
+            .clip(RoundedCornerShape(sliderSize.buttonContainerClipDp))
             .background(
                 Color.Black.copy(
                     alpha = if (thumbOffsetX.absoluteValue > 0.0f) {
@@ -61,11 +61,12 @@ internal fun ButtonContainer(
                     }
                 )
             )
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = sliderSize.buttonContainerHorizontalPaddingDp)
     ) {
         // decrease button
         IconControlButton(
             icon = Icons.Outlined.Remove,
+            sliderSize = sliderSize,
             contentDescription = "Decrease count",
             onClick = onValueDecreaseClick,
             enabled = !clearButtonVisible,
@@ -87,6 +88,7 @@ internal fun ButtonContainer(
         if (clearButtonVisible) {
             IconControlButton(
                 icon = Icons.Outlined.Clear,
+                sliderSize = sliderSize,
                 contentDescription = "Clear count",
                 onClick = onValueClearClick,
                 enabled = false,
@@ -102,6 +104,7 @@ internal fun ButtonContainer(
         // increase button
         IconControlButton(
             icon = Icons.Outlined.Add,
+            sliderSize = sliderSize,
             contentDescription = "Increase count",
             onClick = onValueIncreaseClick,
             enabled = !clearButtonVisible,

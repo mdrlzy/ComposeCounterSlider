@@ -11,10 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.unit.dp
 
 @Composable
 internal fun IconControlButton(
+    sliderSize: SliderSize,
     icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,
@@ -31,13 +31,13 @@ internal fun IconControlButton(
         interactionSource = interactionSource,
         enabled = enabled,
         modifier = modifier
-            .size(48.dp)
+            .size(sliderSize.iconButtonSizeDp)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = if (isPressed) clickTintColor else tintColor,
-            modifier = Modifier.size(32.dp)
+            modifier = Modifier.size(sliderSize.iconSizeDp)
         )
     }
 }
