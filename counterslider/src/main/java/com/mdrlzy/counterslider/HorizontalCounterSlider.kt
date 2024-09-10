@@ -16,6 +16,7 @@ import com.mdrlzy.counterslider.customization.CounterSliderCustomization
 import com.mdrlzy.counterslider.horizontal.HorizontalSliderSize
 import com.mdrlzy.counterslider.horizontal.HorizontalDraggableThumbButton
 import com.mdrlzy.counterslider.horizontal.HorizontalSliderContainer
+import kotlin.math.absoluteValue
 
 @Composable
 fun HorizontalCounterSlider(
@@ -54,7 +55,7 @@ fun HorizontalCounterSlider(
             onValueDecreaseClick = onValueDecreaseClick,
             onValueIncreaseClick = onValueIncreaseClick,
             onValueClearClick = onValueClearClick,
-            clearButtonVisible = thumbOffsetY.value >= verticalDragButtonRevealPx,
+            clearButtonVisible = thumbOffsetY.value.absoluteValue >= verticalDragButtonRevealPx,
             modifier = Modifier
         )
 
