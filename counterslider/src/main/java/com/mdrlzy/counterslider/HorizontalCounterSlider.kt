@@ -15,7 +15,7 @@ import com.mdrlzy.counterslider.customization.CounterSliderColors
 import com.mdrlzy.counterslider.customization.CounterSliderCustomization
 import com.mdrlzy.counterslider.horizontal.HorizontalSliderSize
 import com.mdrlzy.counterslider.horizontal.HorizontalDraggableThumbButton
-import com.mdrlzy.counterslider.horizontal.SliderContainer
+import com.mdrlzy.counterslider.horizontal.HorizontalSliderContainer
 
 @Composable
 fun HorizontalCounterSlider(
@@ -43,7 +43,7 @@ fun HorizontalCounterSlider(
         val thumbOffsetY = remember { Animatable(0f) }
         val verticalDragButtonRevealPx = sliderSize.dragClearIconRevealDp.dpToPx()
 
-        SliderContainer(
+        HorizontalSliderContainer(
             sliderSize = sliderSize,
             colors = colors,
             customization = customization,

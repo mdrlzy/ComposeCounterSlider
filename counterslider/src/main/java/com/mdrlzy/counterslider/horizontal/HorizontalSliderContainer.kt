@@ -22,7 +22,7 @@ import com.mdrlzy.counterslider.dpToPx
 import kotlin.math.absoluteValue
 
 @Composable
-internal fun SliderContainer(
+internal fun HorizontalSliderContainer(
     sliderSize: HorizontalSliderSize,
     colors: CounterSliderColors,
     customization: CounterSliderCustomization,
