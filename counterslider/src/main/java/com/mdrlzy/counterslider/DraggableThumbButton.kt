@@ -250,10 +250,8 @@ private suspend fun handleVerticalDrag(
     // mark vertical dragging direction to prevent horizontal dragging until released
     dragDirection.value = DragDirection.VERTICAL
 
-    val dragFactor =
-        1 - (thumbOffsetY.value / dragLimitVerticalPx).absoluteValue
     val delta =
-        pointerInputChange.positionChange().y * dragFactor
+        pointerInputChange.positionChange().y
 
     val targetValue = thumbOffsetY.value + delta
     val targetValueWithinBounds =
