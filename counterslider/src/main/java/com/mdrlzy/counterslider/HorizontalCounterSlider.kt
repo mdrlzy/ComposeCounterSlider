@@ -23,6 +23,8 @@ fun HorizontalCounterSlider(
     size: DpSize,
     customization: CounterSliderCustomization = CounterSliderCustomization(),
     colors: CounterSliderColors = CounterSliderColors(),
+    allowTopToReset: Boolean = true,
+    allowBottomToReset: Boolean = true,
     value: String,
     onValueDecreaseClick: () -> Unit,
     onValueIncreaseClick: () -> Unit,
@@ -57,6 +59,10 @@ fun HorizontalCounterSlider(
         )
 
         HorizontalDraggableThumbButton(
+            modifier = Modifier.align(Alignment.Center),
+            sliderSize = sliderSize,
+            allowTopToReset = allowTopToReset,
+            allowBottomToReset = allowBottomToReset,
             value = value,
             colors = colors,
             customization = customization,
@@ -66,8 +72,6 @@ fun HorizontalCounterSlider(
             onValueDecreaseClick = onValueDecreaseClick,
             onValueIncreaseClick = onValueIncreaseClick,
             onValueReset = onValueClearClick,
-            modifier = Modifier.align(Alignment.Center),
-            sliderSize = sliderSize
         )
     }
 }

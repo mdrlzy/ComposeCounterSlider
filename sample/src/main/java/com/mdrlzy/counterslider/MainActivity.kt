@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
                             mutableStateOf(0)
                         }
                         HorizontalCounterSlider(
+                            modifier = Modifier.padding(top = 100.dp),
                             size = DpSize(300.dp, 50.dp),
                             value = valueCounter.toString(),
                             onValueIncreaseClick = {
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
                             mutableStateOf(0)
                         }
                         VerticalCounterSlider(
+                            modifier = Modifier.padding(top = 100.dp),
                             size = DpSize(80.dp, 200.dp),
                             value = valueCounter2.toString(),
                             onValueIncreaseClick = {

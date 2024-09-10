@@ -43,9 +43,12 @@ import kotlin.math.sign
 
 @Composable
 internal fun HorizontalDraggableThumbButton(
+    modifier: Modifier = Modifier,
     sliderSize: HorizontalSliderSize,
     colors: CounterSliderColors,
     customization: CounterSliderCustomization,
+    allowTopToReset: Boolean,
+    allowBottomToReset: Boolean,
     value: String,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
     thumbOffsetY: Animatable<Float, AnimationVector1D>,
@@ -53,7 +56,6 @@ internal fun HorizontalDraggableThumbButton(
     onValueDecreaseClick: () -> Unit,
     onValueIncreaseClick: () -> Unit,
     onValueReset: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val dragLimitHorizontalPx = sliderSize.dragLimitHorizontalDp.dpToPx()
     val dragLimitVerticalPx = sliderSize.dragLimitVerticalDp.dpToPx()
@@ -91,6 +93,8 @@ internal fun HorizontalDraggableThumbButton(
                     handlePointerEvents(
                         dragDirection,
                         customization,
+                        allowTopToReset,
+                        allowBottomToReset,
                         scope,
                         startDragThreshold,
                         dragLimitHorizontalPx,
@@ -128,6 +132,8 @@ internal fun HorizontalDraggableThumbButton(
 private suspend fun AwaitPointerEventScope.handlePointerEvents(
     dragDirection: MutableState<DragDirection>,
     customization: CounterSliderCustomization,
+    allowTopToReset: Boolean,
+    allowBottomToReset: Boolean,
     scope: CoroutineScope,
     startDragThreshold: Float,
     dragLimitHorizontalPx: Float,
@@ -175,7 +181,12 @@ private suspend fun AwaitPointerEventScope.handlePointerEvents(
                     )
                 } else if (
                     (dragDirection.value != DragDirection.HORIZONTAL &&
-                            pointerInputChange.positionChange().y >= startDragThreshold)
+                            checkVerticalDrag(
+                                allowTopToReset,
+                                allowBottomToReset,
+                                pointerInputChange.positionChange().y,
+                                startDragThreshold
+                            ))
                 ) {
                     handleVerticalDrag(
                         pointerInputChange,
@@ -242,6 +253,24 @@ private suspend fun handleHorizontalDrag(
         )
 
     thumbOffsetX.snapTo(targetValueWithinBounds)
+}
+
+private fun checkVerticalDrag(
+    allowTopToReset: Boolean,
+    allowBottomToReset: Boolean,
+    y: Float,
+    startDragThreshold: Float
+): Boolean {
+    if (allowTopToReset && allowBottomToReset)
+        return y.absoluteValue >= startDragThreshold
+
+    if (allowTopToReset)
+        return y <= -startDragThreshold
+
+    if (allowBottomToReset)
+        return y >= startDragThreshold
+
+    return false
 }
 
 private suspend fun handleVerticalDrag(
