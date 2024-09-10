@@ -53,17 +53,17 @@ class MainActivity : ComponentActivity() {
                         var valueCounter2 by remember {
                             mutableStateOf(0)
                         }
-                        HorizontalCounterSlider(
-                            size = DpSize(400.dp, 300.dp),
+                        VerticalCounterSlider(
+                            size = DpSize(80.dp, 200.dp),
                             value = valueCounter2.toString(),
                             onValueIncreaseClick = {
-                                valueCounter += 1
+                                valueCounter2 += 1
                             },
                             onValueDecreaseClick = {
-                                valueCounter = maxOf(valueCounter - 1, 0)
+                                valueCounter2 = maxOf(valueCounter2 - 1, 0)
                             },
                             onValueClearClick = {
-                                valueCounter = 0
+                                valueCounter2 = 0
                             }
                         )
                     }
