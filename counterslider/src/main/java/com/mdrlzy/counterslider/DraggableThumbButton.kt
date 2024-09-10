@@ -52,7 +52,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.sign
 
 @Composable
-fun DraggableThumbButton(
+internal fun DraggableThumbButton(
     value: String,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
     thumbOffsetY: Animatable<Float, AnimationVector1D>,
@@ -94,123 +94,30 @@ fun DraggableThumbButton(
             }
             .background(Color.Gray)
             .pointerInput(Unit) {
-                forEachGesture {
-                    awaitPointerEventScope {
-                        awaitFirstDown()
+                awaitEachGesture {
+                    handlePointerEvents(
+                        dragDirection,
+                        scope,
+                        startDragThreshold,
+                        dragLimitHorizontalPx,
+                        dragLimitVerticalPx,
+                        thumbOffsetX,
+                        thumbOffsetY,
+                        onValueDecreaseClick,
+                        onValueIncreaseClick
+                    )
 
-                        // reset drag direction
-                        dragDirection.value = DragDirection.NONE
+                    changeCounterUponRelease(
+                        thumbOffsetX,
+                        thumbOffsetY,
+                        dragLimitHorizontalPx,
+                        dragLimitVerticalPx,
+                        onValueDecreaseClick,
+                        onValueIncreaseClick,
+                        onValueReset
+                    )
 
-                        var counterJob: Job? = null
-
-                        do {
-                            val event = awaitPointerEvent()
-                            event.changes.forEach { pointerInputChange ->
-                                // update logic inside DraggableThumbButton.Modifier.pointerInput
-                                scope.launch {
-                                    if ((dragDirection.value == DragDirection.NONE &&
-                                                pointerInputChange.positionChange().x.absoluteValue >= startDragThreshold) ||
-                                        dragDirection.value == DragDirection.HORIZONTAL
-                                    ) {
-                                        // in case of the initial drag
-                                        if (dragDirection.value == DragDirection.NONE) {
-                                            counterJob = scope.launch {
-                                                delay(COUNTER_DELAY_INITIAL_MS)
-
-                                                while (
-                                                    isActive
-                                                ) {
-                                                    if (
-                                                        thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)
-                                                    ) {
-                                                        if (thumbOffsetX.value.sign > 0) {
-                                                            onValueIncreaseClick()
-                                                        } else {
-                                                            onValueDecreaseClick()
-                                                        }
-                                                    }
-
-                                                    delay(COUNTER_DELAY_FAST_MS)
-                                                }
-                                            }
-                                        }
-
-                                        // mark horizontal dragging direction to prevent vertical dragging until released
-                                        dragDirection.value = DragDirection.HORIZONTAL
-
-                                        // calculate the drag factor so the more the thumb
-                                        // is closer to the border, the more effort it takes to drag it
-                                        val dragFactor =
-                                            1 - (thumbOffsetX.value / dragLimitHorizontalPx).absoluteValue
-                                        val delta =
-                                            pointerInputChange.positionChange().x * dragFactor
-
-                                        val targetValue = thumbOffsetX.value + delta
-                                        val targetValueWithinBounds =
-                                            targetValue.coerceIn(
-                                                -dragLimitHorizontalPx,
-                                                dragLimitHorizontalPx
-                                            )
-
-                                        thumbOffsetX.snapTo(targetValueWithinBounds)
-                                    } else if (
-                                        (dragDirection.value != DragDirection.HORIZONTAL &&
-                                                pointerInputChange.positionChange().y >= startDragThreshold)
-                                    ) {
-                                        // mark vertical dragging direction to prevent horizontal dragging until released
-                                        dragDirection.value = DragDirection.VERTICAL
-
-                                        val dragFactor =
-                                            1 - (thumbOffsetY.value / dragLimitVerticalPx).absoluteValue
-                                        val delta =
-                                            pointerInputChange.positionChange().y * dragFactor
-
-                                        val targetValue = thumbOffsetY.value + delta
-                                        val targetValueWithinBounds =
-                                            targetValue.coerceIn(
-                                                -dragLimitVerticalPx,
-                                                dragLimitVerticalPx
-                                            )
-
-                                        thumbOffsetY.snapTo(targetValueWithinBounds)
-                                    }
-                                }
-                            }
-                        } while (event.changes.any { it.pressed })
-
-                        counterJob?.cancel()
-                    }
-
-                    // detect drag to limit
-                    if (thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)) {
-                        if (thumbOffsetX.value.sign > 0) {
-                            onValueIncreaseClick()
-                        } else {
-                            onValueDecreaseClick()
-                        }
-                    } else if (thumbOffsetY.value.absoluteValue >= (dragLimitVerticalPx * DRAG_LIMIT_VERTICAL_THRESHOLD_FACTOR)) {
-                        onValueReset()
-                    }
-
-                    scope.launch {
-                        if (dragDirection.value == DragDirection.HORIZONTAL && thumbOffsetX.value != 0f) {
-                            thumbOffsetX.animateTo(
-                                targetValue = 0f,
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = StiffnessLow
-                                )
-                            )
-                        } else if (dragDirection.value == DragDirection.VERTICAL && thumbOffsetY.value != 0f) {
-                            thumbOffsetY.animateTo(
-                                targetValue = 0f,
-                                animationSpec = spring(
-                                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                                    stiffness = StiffnessLow
-                                )
-                            )
-                        }
-                    }
+                    animateToStart(scope, dragDirection, thumbOffsetX, thumbOffsetY)
                 }
             }
     ) {
@@ -219,6 +126,193 @@ fun DraggableThumbButton(
             color = Color.White,
             style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center,
+        )
+    }
+}
+
+private suspend fun AwaitPointerEventScope.handlePointerEvents(
+    dragDirection: MutableState<DragDirection>,
+    scope: CoroutineScope,
+    startDragThreshold: Float,
+    dragLimitHorizontalPx: Float,
+    dragLimitVerticalPx: Float,
+    thumbOffsetX: Animatable<Float, AnimationVector1D>,
+    thumbOffsetY: Animatable<Float, AnimationVector1D>,
+    onValueDecreaseClick: () -> Unit,
+    onValueIncreaseClick: () -> Unit,
+) {
+    awaitFirstDown()
+
+    // reset drag direction
+    dragDirection.value = DragDirection.NONE
+
+    var counterJob: Job? = null
+
+    do {
+        val event = awaitPointerEvent()
+        event.changes.forEach { pointerInputChange ->
+            // update logic inside DraggableThumbButton.Modifier.pointerInput
+            scope.launch {
+                if ((dragDirection.value == DragDirection.NONE &&
+                            pointerInputChange.positionChange().x.absoluteValue >= startDragThreshold) ||
+                    dragDirection.value == DragDirection.HORIZONTAL
+                ) {
+                    // in case of the initial drag
+                    if (dragDirection.value == DragDirection.NONE) {
+                        counterJob = scope.launch {
+                            listenToThumbPosition(
+                                scope,
+                                thumbOffsetX,
+                                dragLimitHorizontalPx,
+                                onValueDecreaseClick,
+                                onValueIncreaseClick
+                            )
+                        }
+                    }
+
+                    handleHorizontalDrag(
+                        pointerInputChange,
+                        thumbOffsetX,
+                        dragLimitHorizontalPx,
+                        dragDirection
+                    )
+                } else if (
+                    (dragDirection.value != DragDirection.HORIZONTAL &&
+                            pointerInputChange.positionChange().y >= startDragThreshold)
+                ) {
+                    handleVerticalDrag(
+                        pointerInputChange,
+                        thumbOffsetY,
+                        dragDirection,
+                        dragLimitVerticalPx
+                    )
+                }
+            }
+        }
+    } while (event.changes.any { it.pressed })
+
+    counterJob?.cancel()
+}
+
+private suspend fun listenToThumbPosition(
+    scope: CoroutineScope,
+    thumbOffsetX: Animatable<Float, AnimationVector1D>,
+    dragLimitHorizontalPx: Float,
+    onValueDecreaseClick: () -> Unit,
+    onValueIncreaseClick: () -> Unit,
+) {
+    delay(COUNTER_DELAY_INITIAL_MS)
+
+    while (
+        scope.isActive
+    ) {
+        if (
+            thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)
+        ) {
+            if (thumbOffsetX.value.sign > 0) {
+                onValueIncreaseClick()
+            } else {
+                onValueDecreaseClick()
+            }
+        }
+
+        delay(COUNTER_DELAY_FAST_MS)
+    }
+}
+
+private suspend fun handleHorizontalDrag(
+    pointerInputChange: PointerInputChange,
+    thumbOffsetX: Animatable<Float, AnimationVector1D>,
+    dragLimitHorizontalPx: Float,
+    dragDirection: MutableState<DragDirection>,
+) {
+    // mark horizontal dragging direction to prevent vertical dragging until released
+    dragDirection.value =
+        DragDirection.HORIZONTAL
+
+    // calculate the drag factor so the more the thumb
+    // is closer to the border, the more effort it takes to drag it
+    val dragFactor =
+        1 - (thumbOffsetX.value / dragLimitHorizontalPx).absoluteValue
+    val delta =
+        pointerInputChange.positionChange().x * dragFactor
+
+    val targetValue = thumbOffsetX.value + delta
+    val targetValueWithinBounds =
+        targetValue.coerceIn(
+            -dragLimitHorizontalPx,
+            dragLimitHorizontalPx
+        )
+
+    thumbOffsetX.snapTo(targetValueWithinBounds)
+}
+
+private suspend fun handleVerticalDrag(
+    pointerInputChange: PointerInputChange,
+    thumbOffsetY: Animatable<Float, AnimationVector1D>,
+    dragDirection: MutableState<DragDirection>,
+    dragLimitVerticalPx: Float,
+) {
+    // mark vertical dragging direction to prevent horizontal dragging until released
+    dragDirection.value = DragDirection.VERTICAL
+
+    val dragFactor =
+        1 - (thumbOffsetY.value / dragLimitVerticalPx).absoluteValue
+    val delta =
+        pointerInputChange.positionChange().y * dragFactor
+
+    val targetValue = thumbOffsetY.value + delta
+    val targetValueWithinBounds =
+        targetValue.coerceIn(
+            -dragLimitVerticalPx,
+            dragLimitVerticalPx
+        )
+
+    thumbOffsetY.snapTo(targetValueWithinBounds)
+}
+
+private fun changeCounterUponRelease(
+    thumbOffsetX: Animatable<Float, AnimationVector1D>,
+    thumbOffsetY: Animatable<Float, AnimationVector1D>,
+    dragLimitHorizontalPx: Float,
+    dragLimitVerticalPx: Float,
+    onValueDecreaseClick: () -> Unit,
+    onValueIncreaseClick: () -> Unit,
+    onValueReset: () -> Unit,
+) {
+    // detect drag to limit
+    if (thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)) {
+        if (thumbOffsetX.value.sign > 0) {
+            onValueIncreaseClick()
+        } else {
+            onValueDecreaseClick()
+        }
+    } else if (thumbOffsetY.value.absoluteValue >= (dragLimitVerticalPx * DRAG_LIMIT_VERTICAL_THRESHOLD_FACTOR)) {
+        onValueReset()
+    }
+}
+
+private fun animateToStart(
+    scope: CoroutineScope,
+    dragDirection: MutableState<DragDirection>,
+    thumbOffsetX: Animatable<Float, AnimationVector1D>,
+    thumbOffsetY: Animatable<Float, AnimationVector1D>,
+) = scope.launch {
+    if (dragDirection.value == DragDirection.HORIZONTAL && thumbOffsetX.value != 0f) {
+        thumbOffsetX.animateTo(
+            targetValue = 0f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = StiffnessLow
+            )
+        )
+    } else if (dragDirection.value == DragDirection.VERTICAL && thumbOffsetY.value != 0f) {
+        thumbOffsetY.animateTo(
+            targetValue = 0f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = StiffnessLow
+            )
         )
     }
 }
