@@ -41,6 +41,7 @@ fun CounterSlider(
         SliderContainer(
             sliderSize = sliderSize,
             colors = colors,
+            customization = customization,
             thumbOffsetX = thumbOffsetX.value,
             thumbOffsetY = thumbOffsetY.value,
             onValueDecreaseClick = onValueDecreaseClick,

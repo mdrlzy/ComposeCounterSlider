@@ -23,6 +23,7 @@ import kotlin.math.absoluteValue
 internal fun SliderContainer(
     sliderSize: SliderSize,
     colors: CounterSliderColors,
+    customization: CounterSliderCustomization,
     thumbOffsetX: Float,
     thumbOffsetY: Float,
     onValueDecreaseClick: () -> Unit,
@@ -41,8 +42,8 @@ internal fun SliderContainer(
         modifier = modifier
             .offset {
                 IntOffset(
-                    (thumbOffsetX * CONTAINER_OFFSET_FACTOR).toInt(),
-                    (thumbOffsetY * CONTAINER_OFFSET_FACTOR).toInt(),
+                    (thumbOffsetX * customization.containerOffsetFactor).toInt(),
+                    (thumbOffsetY * customization.containerOffsetFactor).toInt(),
                 )
             }
             .fillMaxSize()
@@ -51,14 +52,14 @@ internal fun SliderContainer(
                 colors.containerColor.copy(
                     alpha = if (thumbOffsetX.absoluteValue > 0.0f) {
                         // horizontal
-                        (CONTAINER_BACKGROUND_ALPHA_INITIAL + ((thumbOffsetX.absoluteValue / horizontalHighlightLimitPx) / 20f))
-                            .coerceAtMost(CONTAINER_BACKGROUND_ALPHA_MAX)
+                        (customization.containerBackgroundAlphaInitial + ((thumbOffsetX.absoluteValue / horizontalHighlightLimitPx) / 20f))
+                            .coerceAtMost(customization.containerBackgroundAlphaMax)
                     } else if (thumbOffsetY.absoluteValue > 0.0f) {
                         // vertical
-                        (CONTAINER_BACKGROUND_ALPHA_INITIAL + ((thumbOffsetY.absoluteValue / verticalHighlightLimitPx) / 10f))
-                            .coerceAtMost(CONTAINER_BACKGROUND_ALPHA_MAX)
+                        (customization.containerBackgroundAlphaInitial + ((thumbOffsetY.absoluteValue / verticalHighlightLimitPx) / 10f))
+                            .coerceAtMost(customization.containerBackgroundAlphaMax)
                     } else {
-                        CONTAINER_BACKGROUND_ALPHA_INITIAL
+                        customization.containerBackgroundAlphaInitial
                     }
                 )
             )
@@ -76,11 +77,11 @@ internal fun SliderContainer(
                     0.0f
                 } else if (thumbOffsetX < 0) {
                     (thumbOffsetX.absoluteValue / horizontalHighlightLimitPx).coerceIn(
-                        ICON_BUTTON_ALPHA_INITIAL,
+                        customization.iconButtonInitialAlpha,
                         1f
                     )
                 } else {
-                    ICON_BUTTON_ALPHA_INITIAL
+                    customization.iconButtonInitialAlpha
                 }
             ),
             clickTintColor = colors.clickedIconColor
@@ -96,7 +97,7 @@ internal fun SliderContainer(
                 enabled = false,
                 tintColor = colors.iconColor.copy(
                     alpha = (thumbOffsetY.absoluteValue / verticalHighlightLimitPx).coerceIn(
-                        ICON_BUTTON_ALPHA_INITIAL,
+                        customization.iconButtonInitialAlpha,
                         1f
                     )
                 ),
@@ -116,11 +117,11 @@ internal fun SliderContainer(
                     0.0f
                 } else if (thumbOffsetX > 0) {
                     (thumbOffsetX.absoluteValue / horizontalHighlightLimitPx).coerceIn(
-                        ICON_BUTTON_ALPHA_INITIAL,
+                        customization.iconButtonInitialAlpha,
                         1f
                     )
                 } else {
-                    ICON_BUTTON_ALPHA_INITIAL
+                    customization.iconButtonInitialAlpha
                 }
             ),
             clickTintColor = colors.clickedIconColor

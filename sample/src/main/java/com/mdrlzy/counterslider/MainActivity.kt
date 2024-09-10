@@ -42,13 +42,6 @@ class MainActivity : ComponentActivity() {
                         CounterSlider(
                             size = DpSize(300.dp, 50.dp),
                             value = valueCounter.toString(),
-                            colors = CounterSliderColors(
-                                containerColor = Color.Blue,
-                                thumbColor = Color.Red,
-                                iconColor = Color.White,
-                                clickedIconColor = Color.White,
-                                textColor = Color.White
-                            ),
                             onValueIncreaseClick = {
                                 valueCounter += 1
                             },
