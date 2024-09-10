@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.IntOffset
 import kotlin.math.absoluteValue
 
 @Composable
-internal fun ButtonContainer(
+internal fun SliderContainer(
     sliderSize: SliderSize,
     thumbOffsetX: Float,
     thumbOffsetY: Float,

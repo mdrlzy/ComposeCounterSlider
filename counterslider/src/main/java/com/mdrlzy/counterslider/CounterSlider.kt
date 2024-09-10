@@ -37,7 +37,7 @@ fun CounterSlider(
         val thumbOffsetY = remember { Animatable(0f) }
         val verticalDragButtonRevealPx = sliderSize.dragClearIconRevealDp.dpToPx()
 
-        ButtonContainer(
+        SliderContainer(
             sliderSize = sliderSize,
             thumbOffsetX = thumbOffsetX.value,
             thumbOffsetY = thumbOffsetY.value,
