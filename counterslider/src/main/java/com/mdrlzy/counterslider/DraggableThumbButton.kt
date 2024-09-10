@@ -117,16 +117,20 @@ fun DraggableThumbButton(
                                             counterJob = scope.launch {
                                                 delay(COUNTER_DELAY_INITIAL_MS)
 
-                                                var elapsed = COUNTER_DELAY_INITIAL_MS
-                                                while (isActive && thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)) {
-                                                    if (thumbOffsetX.value.sign > 0) {
-                                                        onValueIncreaseClick()
-                                                    } else {
-                                                        onValueDecreaseClick()
+                                                while (
+                                                    isActive
+                                                ) {
+                                                    if (
+                                                        thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)
+                                                    ) {
+                                                        if (thumbOffsetX.value.sign > 0) {
+                                                            onValueIncreaseClick()
+                                                        } else {
+                                                            onValueDecreaseClick()
+                                                        }
                                                     }
 
                                                     delay(COUNTER_DELAY_FAST_MS)
-                                                    elapsed += COUNTER_DELAY_FAST_MS
                                                 }
                                             }
                                         }
