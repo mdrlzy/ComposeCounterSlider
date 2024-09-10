@@ -19,8 +19,8 @@ internal fun IconControlButton(
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    tintColor: Color = Color.White,
-    clickTintColor: Color = Color.White,
+    tintColor: Color,
+    clickTintColor: Color,
     enabled: Boolean = true
 ) {
     val interactionSource = remember { MutableInteractionSource() }

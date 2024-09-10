@@ -22,6 +22,7 @@ import kotlin.math.absoluteValue
 @Composable
 internal fun SliderContainer(
     sliderSize: SliderSize,
+    colors: CounterSliderColors,
     thumbOffsetX: Float,
     thumbOffsetY: Float,
     onValueDecreaseClick: () -> Unit,
@@ -47,7 +48,7 @@ internal fun SliderContainer(
             .fillMaxSize()
             .clip(RoundedCornerShape(sliderSize.buttonContainerClipDp))
             .background(
-                Color.Black.copy(
+                colors.containerColor.copy(
                     alpha = if (thumbOffsetX.absoluteValue > 0.0f) {
                         // horizontal
                         (CONTAINER_BACKGROUND_ALPHA_INITIAL + ((thumbOffsetX.absoluteValue / horizontalHighlightLimitPx) / 20f))
@@ -70,7 +71,7 @@ internal fun SliderContainer(
             contentDescription = "Decrease count",
             onClick = onValueDecreaseClick,
             enabled = !clearButtonVisible,
-            tintColor = Color.White.copy(
+            tintColor = colors.iconColor.copy(
                 alpha = if (clearButtonVisible) {
                     0.0f
                 } else if (thumbOffsetX < 0) {
@@ -81,7 +82,8 @@ internal fun SliderContainer(
                 } else {
                     ICON_BUTTON_ALPHA_INITIAL
                 }
-            )
+            ),
+            clickTintColor = colors.clickedIconColor
         )
 
         // clear button
@@ -92,12 +94,13 @@ internal fun SliderContainer(
                 contentDescription = "Clear count",
                 onClick = onValueClearClick,
                 enabled = false,
-                tintColor = Color.White.copy(
+                tintColor = colors.iconColor.copy(
                     alpha = (thumbOffsetY.absoluteValue / verticalHighlightLimitPx).coerceIn(
                         ICON_BUTTON_ALPHA_INITIAL,
                         1f
                     )
-                )
+                ),
+                clickTintColor = colors.clickedIconColor
             )
         }
 
@@ -108,7 +111,7 @@ internal fun SliderContainer(
             contentDescription = "Increase count",
             onClick = onValueIncreaseClick,
             enabled = !clearButtonVisible,
-            tintColor = Color.White.copy(
+            tintColor = colors.iconColor.copy(
                 alpha = if (clearButtonVisible) {
                     0.0f
                 } else if (thumbOffsetX > 0) {
@@ -119,7 +122,8 @@ internal fun SliderContainer(
                 } else {
                     ICON_BUTTON_ALPHA_INITIAL
                 }
-            )
+            ),
+            clickTintColor = colors.clickedIconColor
         )
     }
 }

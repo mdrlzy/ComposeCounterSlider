@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -41,6 +42,13 @@ class MainActivity : ComponentActivity() {
                         CounterSlider(
                             size = DpSize(300.dp, 50.dp),
                             value = valueCounter.toString(),
+                            colors = CounterSliderColors(
+                                containerColor = Color.Blue,
+                                thumbColor = Color.Red,
+                                iconColor = Color.White,
+                                clickedIconColor = Color.White,
+                                textColor = Color.White
+                            ),
                             onValueIncreaseClick = {
                                 valueCounter += 1
                             },

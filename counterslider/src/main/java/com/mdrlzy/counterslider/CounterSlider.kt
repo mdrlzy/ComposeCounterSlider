@@ -14,13 +14,14 @@ import androidx.compose.ui.unit.DpSize
 
 @Composable
 fun CounterSlider(
+    modifier: Modifier = Modifier,
     size: DpSize,
     customization: CounterSliderCustomization = CounterSliderCustomization(),
+    colors: CounterSliderColors = CounterSliderColors(),
     value: String,
     onValueDecreaseClick: () -> Unit,
     onValueIncreaseClick: () -> Unit,
     onValueClearClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val sliderSize by remember {
         derivedStateOf{
@@ -39,6 +40,7 @@ fun CounterSlider(
 
         SliderContainer(
             sliderSize = sliderSize,
+            colors = colors,
             thumbOffsetX = thumbOffsetX.value,
             thumbOffsetY = thumbOffsetY.value,
             onValueDecreaseClick = onValueDecreaseClick,
@@ -50,6 +52,7 @@ fun CounterSlider(
 
         DraggableThumbButton(
             value = value,
+            colors = colors,
             customization = customization,
             thumbOffsetX = thumbOffsetX,
             thumbOffsetY = thumbOffsetY,

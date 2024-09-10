@@ -41,6 +41,7 @@ import kotlin.math.sign
 @Composable
 internal fun DraggableThumbButton(
     sliderSize: SliderSize,
+    colors: CounterSliderColors,
     customization: CounterSliderCustomization,
     value: String,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
@@ -81,7 +82,7 @@ internal fun DraggableThumbButton(
                     onClick()
                 }
             }
-            .background(Color.Gray)
+            .background(colors.thumbColor)
             .pointerInput(Unit) {
                 awaitEachGesture {
                     handlePointerEvents(
@@ -114,7 +115,7 @@ internal fun DraggableThumbButton(
     ) {
         Text(
             text = value,
-            color = Color.White,
+            color = colors.textColor,
             fontSize = sliderSize.valueFontSizeSp,
             textAlign = TextAlign.Center,
         )
