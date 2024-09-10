@@ -11,11 +11,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.Dp
 import com.mdrlzy.counterslider.horizontal.HorizontalSliderSize
 
 @Composable
 internal fun IconControlButton(
-    sliderSize: HorizontalSliderSize,
+    iconButtonSize: Dp,
+    iconSize: Dp,
     icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,
@@ -32,13 +34,13 @@ internal fun IconControlButton(
         interactionSource = interactionSource,
         enabled = enabled,
         modifier = modifier
-            .size(sliderSize.iconButtonSizeDp)
+            .size(iconButtonSize)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
             tint = if (isPressed) clickTintColor else tintColor,
-            modifier = Modifier.size(sliderSize.iconSizeDp)
+            modifier = Modifier.size(iconSize)
         )
     }
 }

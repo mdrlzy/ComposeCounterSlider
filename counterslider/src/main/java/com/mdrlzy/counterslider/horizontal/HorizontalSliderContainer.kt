@@ -69,7 +69,8 @@ internal fun HorizontalSliderContainer(
         IconControlButton(
             modifier = Modifier.align(Alignment.CenterStart),
             icon = Icons.Outlined.Remove,
-            sliderSize = sliderSize,
+            iconButtonSize = sliderSize.iconButtonSizeDp,
+            iconSize = sliderSize.iconSizeDp,
             contentDescription = "Decrease count",
             onClick = onValueDecreaseClick,
             enabled = !clearButtonVisible,
@@ -93,7 +94,8 @@ internal fun HorizontalSliderContainer(
             IconControlButton(
                 modifier = Modifier.align(Alignment.Center),
                 icon = Icons.Outlined.Clear,
-                sliderSize = sliderSize,
+                iconButtonSize = sliderSize.iconButtonSizeDp,
+                iconSize = sliderSize.iconSizeDp,
                 contentDescription = "Clear count",
                 onClick = onValueClearClick,
                 enabled = false,
@@ -111,7 +113,8 @@ internal fun HorizontalSliderContainer(
         IconControlButton(
             modifier = Modifier.align(Alignment.CenterEnd),
             icon = Icons.Outlined.Add,
-            sliderSize = sliderSize,
+            iconButtonSize = sliderSize.iconButtonSizeDp,
+            iconSize = sliderSize.iconSizeDp,
             contentDescription = "Increase count",
             onClick = onValueIncreaseClick,
             enabled = !clearButtonVisible,
