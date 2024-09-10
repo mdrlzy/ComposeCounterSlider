@@ -2,6 +2,7 @@ package com.mdrlzy.counterslider
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -36,9 +37,7 @@ internal fun SliderContainer(
     val horizontalHighlightLimitPx = sliderSize.dragHorizontalIconHighlightDp.dpToPx()
     val verticalHighlightLimitPx = sliderSize.dragVerticalIconHighlightDp.dpToPx()
 
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+    Box(
         modifier = modifier
             .offset {
                 IntOffset(
@@ -67,6 +66,7 @@ internal fun SliderContainer(
     ) {
         // decrease button
         IconControlButton(
+            modifier = Modifier.align(Alignment.CenterStart),
             icon = Icons.Outlined.Remove,
             sliderSize = sliderSize,
             contentDescription = "Decrease count",
@@ -90,6 +90,7 @@ internal fun SliderContainer(
         // clear button
         if (clearButtonVisible) {
             IconControlButton(
+                modifier = Modifier.align(Alignment.Center),
                 icon = Icons.Outlined.Clear,
                 sliderSize = sliderSize,
                 contentDescription = "Clear count",
@@ -107,6 +108,7 @@ internal fun SliderContainer(
 
         // increase button
         IconControlButton(
+            modifier = Modifier.align(Alignment.CenterEnd),
             icon = Icons.Outlined.Add,
             sliderSize = sliderSize,
             contentDescription = "Increase count",
