@@ -1,4 +1,4 @@
-package com.mdrlzy.counterslider
+package com.mdrlzy.counterslider.customization
 
 class CounterSliderCustomization(
     val dragLimitHorizontalThresholdFactor: Float = 0.8f,

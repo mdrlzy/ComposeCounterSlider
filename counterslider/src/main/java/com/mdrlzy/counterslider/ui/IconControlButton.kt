@@ -1,4 +1,4 @@
-package com.mdrlzy.counterslider
+package com.mdrlzy.counterslider.ui
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -11,10 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.mdrlzy.counterslider.horizontal.HorizontalSliderSize
 
 @Composable
 internal fun IconControlButton(
-    sliderSize: SliderSize,
+    sliderSize: HorizontalSliderSize,
     icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,

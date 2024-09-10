@@ -1,4 +1,4 @@
-package com.mdrlzy.counterslider
+package com.mdrlzy.counterslider.horizontal
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -23,13 +23,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.AwaitPointerEventScope
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
+import com.mdrlzy.counterslider.customization.CounterSliderColors
+import com.mdrlzy.counterslider.customization.CounterSliderCustomization
+import com.mdrlzy.counterslider.DragDirection
+import com.mdrlzy.counterslider.dpToPx
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -39,8 +42,8 @@ import kotlin.math.absoluteValue
 import kotlin.math.sign
 
 @Composable
-internal fun DraggableThumbButton(
-    sliderSize: SliderSize,
+internal fun HorizontalDraggableThumbButton(
+    sliderSize: HorizontalSliderSize,
     colors: CounterSliderColors,
     customization: CounterSliderCustomization,
     value: String,

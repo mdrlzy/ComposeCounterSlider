@@ -11,9 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
+import com.mdrlzy.counterslider.customization.CounterSliderColors
+import com.mdrlzy.counterslider.customization.CounterSliderCustomization
+import com.mdrlzy.counterslider.horizontal.HorizontalSliderSize
+import com.mdrlzy.counterslider.horizontal.HorizontalDraggableThumbButton
+import com.mdrlzy.counterslider.horizontal.SliderContainer
 
 @Composable
-fun CounterSlider(
+fun HorizontalCounterSlider(
     modifier: Modifier = Modifier,
     size: DpSize,
     customization: CounterSliderCustomization = CounterSliderCustomization(),
@@ -25,7 +30,7 @@ fun CounterSlider(
 ) {
     val sliderSize by remember {
         derivedStateOf{
-            SliderSize(size)
+            HorizontalSliderSize(size)
         }
     }
     Box(
@@ -51,7 +56,7 @@ fun CounterSlider(
             modifier = Modifier
         )
 
-        DraggableThumbButton(
+        HorizontalDraggableThumbButton(
             value = value,
             colors = colors,
             customization = customization,

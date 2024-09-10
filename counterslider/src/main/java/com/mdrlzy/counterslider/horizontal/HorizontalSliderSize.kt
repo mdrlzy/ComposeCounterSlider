@@ -1,11 +1,11 @@
-package com.mdrlzy.counterslider
+package com.mdrlzy.counterslider.horizontal
 
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 
 // The magic numbers are calculated based on sizes from original code
-internal class SliderSize(
+internal class HorizontalSliderSize(
     val size: DpSize
 ) {
     val thumbButtonSizeDp = 0.8 * size.height

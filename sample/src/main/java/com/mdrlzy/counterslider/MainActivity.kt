@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -39,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         var valueCounter by remember {
                             mutableStateOf(0)
                         }
-                        CounterSlider(
+                        HorizontalCounterSlider(
                             size = DpSize(300.dp, 50.dp),
                             value = valueCounter.toString(),
                             onValueIncreaseClick = {
@@ -55,7 +53,7 @@ class MainActivity : ComponentActivity() {
                         var valueCounter2 by remember {
                             mutableStateOf(0)
                         }
-                        CounterSlider(
+                        HorizontalCounterSlider(
                             size = DpSize(400.dp, 300.dp),
                             value = valueCounter2.toString(),
                             onValueIncreaseClick = {

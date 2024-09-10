@@ -1,4 +1,4 @@
-package com.mdrlzy.counterslider
+package com.mdrlzy.counterslider.customization
 
 import androidx.compose.ui.graphics.Color
 
