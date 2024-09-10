@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "CounterSlider"
 include(":sample")
+include(":counterslider")
