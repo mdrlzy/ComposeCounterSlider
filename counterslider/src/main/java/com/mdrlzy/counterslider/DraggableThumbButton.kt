@@ -41,6 +41,7 @@ import kotlin.math.sign
 @Composable
 internal fun DraggableThumbButton(
     sliderSize: SliderSize,
+    customization: CounterSliderCustomization,
     value: String,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
     thumbOffsetY: Animatable<Float, AnimationVector1D>,
@@ -85,6 +86,7 @@ internal fun DraggableThumbButton(
                 awaitEachGesture {
                     handlePointerEvents(
                         dragDirection,
+                        customization,
                         scope,
                         startDragThreshold,
                         dragLimitHorizontalPx,
@@ -96,6 +98,7 @@ internal fun DraggableThumbButton(
                     )
 
                     changeCounterUponRelease(
+                        customization,
                         thumbOffsetX,
                         thumbOffsetY,
                         dragLimitHorizontalPx,
@@ -120,6 +123,7 @@ internal fun DraggableThumbButton(
 
 private suspend fun AwaitPointerEventScope.handlePointerEvents(
     dragDirection: MutableState<DragDirection>,
+    customization: CounterSliderCustomization,
     scope: CoroutineScope,
     startDragThreshold: Float,
     dragLimitHorizontalPx: Float,
@@ -150,6 +154,7 @@ private suspend fun AwaitPointerEventScope.handlePointerEvents(
                         counterJob = scope.launch {
                             listenToThumbPosition(
                                 scope,
+                                customization,
                                 thumbOffsetX,
                                 dragLimitHorizontalPx,
                                 onValueDecreaseClick,
@@ -184,18 +189,22 @@ private suspend fun AwaitPointerEventScope.handlePointerEvents(
 
 private suspend fun listenToThumbPosition(
     scope: CoroutineScope,
+    customization: CounterSliderCustomization,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
     dragLimitHorizontalPx: Float,
     onValueDecreaseClick: () -> Unit,
     onValueIncreaseClick: () -> Unit,
 ) {
-    delay(COUNTER_DELAY_INITIAL_MS)
+    delay(customization.counterDelayInitialMS)
+
+    val dragLimitHorizontalPxWithFactor =
+        (dragLimitHorizontalPx * customization.dragLimitHorizontalThresholdFactor)
 
     while (
         scope.isActive
     ) {
         if (
-            thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)
+            thumbOffsetX.value.absoluteValue >= dragLimitHorizontalPxWithFactor
         ) {
             if (thumbOffsetX.value.sign > 0) {
                 onValueIncreaseClick()
@@ -204,7 +213,7 @@ private suspend fun listenToThumbPosition(
             }
         }
 
-        delay(COUNTER_DELAY_FAST_MS)
+        delay(customization.counterRepeatDelayMS)
     }
 }
 
@@ -256,6 +265,7 @@ private suspend fun handleVerticalDrag(
 }
 
 private fun changeCounterUponRelease(
+    customization: CounterSliderCustomization,
     thumbOffsetX: Animatable<Float, AnimationVector1D>,
     thumbOffsetY: Animatable<Float, AnimationVector1D>,
     dragLimitHorizontalPx: Float,
@@ -264,14 +274,19 @@ private fun changeCounterUponRelease(
     onValueIncreaseClick: () -> Unit,
     onValueReset: () -> Unit,
 ) {
+    val dragLimitHorizontalPxWithFactor =
+        (dragLimitHorizontalPx * customization.dragLimitHorizontalThresholdFactor)
+    val dragLimitVerticalPxWithFactor =
+        (dragLimitVerticalPx * customization.dragLimitVerticalThresholdFactor)
+
     // detect drag to limit
-    if (thumbOffsetX.value.absoluteValue >= (dragLimitHorizontalPx * DRAG_LIMIT_HORIZONTAL_THRESHOLD_FACTOR)) {
+    if (thumbOffsetX.value.absoluteValue >= dragLimitHorizontalPxWithFactor) {
         if (thumbOffsetX.value.sign > 0) {
             onValueIncreaseClick()
         } else {
             onValueDecreaseClick()
         }
-    } else if (thumbOffsetY.value.absoluteValue >= (dragLimitVerticalPx * DRAG_LIMIT_VERTICAL_THRESHOLD_FACTOR)) {
+    } else if (thumbOffsetY.value.absoluteValue >= dragLimitVerticalPxWithFactor) {
         onValueReset()
     }
 }

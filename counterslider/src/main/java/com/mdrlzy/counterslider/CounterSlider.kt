@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.DpSize
 @Composable
 fun CounterSlider(
     size: DpSize,
+    customization: CounterSliderCustomization = CounterSliderCustomization(),
     value: String,
     onValueDecreaseClick: () -> Unit,
     onValueIncreaseClick: () -> Unit,
@@ -49,6 +50,7 @@ fun CounterSlider(
 
         DraggableThumbButton(
             value = value,
+            customization = customization,
             thumbOffsetX = thumbOffsetX,
             thumbOffsetY = thumbOffsetY,
             onClick = onValueIncreaseClick,
