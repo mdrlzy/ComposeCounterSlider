@@ -23,6 +23,8 @@ fun VerticalCounterSlider(
     size: DpSize,
     customization: CounterSliderCustomization = CounterSliderCustomization(),
     colors: CounterSliderColors = CounterSliderColors(),
+    allowLeftToReset: Boolean = true,
+    allowRightToReset: Boolean = true,
     value: String,
     onValueDecreaseClick: () -> Unit,
     onValueIncreaseClick: () -> Unit,
@@ -57,17 +59,19 @@ fun VerticalCounterSlider(
         )
 
         VerticalDraggableThumbButton(
-            value = value,
+            modifier = Modifier.align(Alignment.Center),
+            sliderSize = sliderSize,
             colors = colors,
             customization = customization,
+            allowLeftToReset = allowLeftToReset,
+            allowRightToReset = allowRightToReset,
+            value = value,
             thumbOffsetX = thumbOffsetX,
             thumbOffsetY = thumbOffsetY,
             onClick = onValueIncreaseClick,
             onValueDecreaseClick = onValueDecreaseClick,
             onValueIncreaseClick = onValueIncreaseClick,
             onValueReset = onValueClearClick,
-            modifier = Modifier.align(Alignment.Center),
-            sliderSize = sliderSize
         )
     }
 }
