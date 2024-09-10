@@ -181,14 +181,11 @@ private suspend fun AwaitPointerEventScope.handlePointerEvents(
                     )
                 } else if (
                     (dragDirection.value != DragDirection.HORIZONTAL &&
-                            checkVerticalDrag(
-                                allowTopToReset,
-                                allowBottomToReset,
-                                pointerInputChange.positionChange().y,
-                                startDragThreshold
-                            ))
+                            pointerInputChange.positionChange().y.absoluteValue >= startDragThreshold)
                 ) {
                     handleVerticalDrag(
+                        allowTopToReset,
+                        allowBottomToReset,
                         pointerInputChange,
                         thumbOffsetY,
                         dragDirection,
@@ -255,25 +252,9 @@ private suspend fun handleHorizontalDrag(
     thumbOffsetX.snapTo(targetValueWithinBounds)
 }
 
-private fun checkVerticalDrag(
+private suspend fun handleVerticalDrag(
     allowTopToReset: Boolean,
     allowBottomToReset: Boolean,
-    y: Float,
-    startDragThreshold: Float
-): Boolean {
-    if (allowTopToReset && allowBottomToReset)
-        return y.absoluteValue >= startDragThreshold
-
-    if (allowTopToReset)
-        return y <= -startDragThreshold
-
-    if (allowBottomToReset)
-        return y >= startDragThreshold
-
-    return false
-}
-
-private suspend fun handleVerticalDrag(
     pointerInputChange: PointerInputChange,
     thumbOffsetY: Animatable<Float, AnimationVector1D>,
     dragDirection: MutableState<DragDirection>,
@@ -282,14 +263,16 @@ private suspend fun handleVerticalDrag(
     // mark vertical dragging direction to prevent horizontal dragging until released
     dragDirection.value = DragDirection.VERTICAL
 
-    val delta =
-        pointerInputChange.positionChange().y
+    val delta = pointerInputChange.positionChange().y
+
+    val topBound = if (allowTopToReset) -dragLimitVerticalPx else 0f
+    val bottomBound = if (allowBottomToReset) dragLimitVerticalPx else 0f
 
     val targetValue = thumbOffsetY.value + delta
     val targetValueWithinBounds =
         targetValue.coerceIn(
-            -dragLimitVerticalPx,
-            dragLimitVerticalPx
+            topBound,
+            bottomBound
         )
 
     thumbOffsetY.snapTo(targetValueWithinBounds)
