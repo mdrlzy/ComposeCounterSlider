@@ -315,7 +315,7 @@ private fun animateToStart(
         thumbOffsetX.animateTo(
             targetValue = 0f,
             animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
+                dampingRatio = Spring.DampingRatioLowBouncy,
                 stiffness = StiffnessLow
             )
         )
@@ -323,7 +323,7 @@ private fun animateToStart(
         thumbOffsetY.animateTo(
             targetValue = 0f,
             animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
+                dampingRatio = Spring.DampingRatioLowBouncy,
                 stiffness = StiffnessLow
             )
         )
