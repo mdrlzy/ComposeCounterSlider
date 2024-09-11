@@ -16,9 +16,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.mdrlzy.counterslider.customization.CounterSliderColors
 import com.mdrlzy.counterslider.ui.theme.CounterSliderTheme
 
 class MainActivity : ComponentActivity() {
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
                         }
                         HorizontalCounterSlider(
                             modifier = Modifier.padding(top = 100.dp),
-                            size = DpSize(300.dp, 50.dp),
+                            size = DpSize(300.dp, 100.dp),
                             value = valueCounter.toString(),
                             onValueIncreaseClick = {
                                 valueCounter += 1
@@ -58,6 +60,10 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.padding(top = 100.dp),
                             size = DpSize(80.dp, 200.dp),
                             value = valueCounter2.toString(),
+                            colors = CounterSliderColors(
+                                thumbColor = Color(0xFFFF4500),
+                                containerColor = Color(0xFFFF5719)
+                            ),
                             onValueIncreaseClick = {
                                 valueCounter2 += 1
                             },
