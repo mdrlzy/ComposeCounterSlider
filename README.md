@@ -32,7 +32,7 @@ var valueCounter by remember {
     mutableStateOf(0)
 }
 HorizontalCounterSlider(
-    modifier = Modifier.padding(top = 100.dp),
+    modifier = Modifier,
     size = DpSize(200.dp, 80.dp),
     value = valueCounter.toString(),
     allowTopToReset = true,
