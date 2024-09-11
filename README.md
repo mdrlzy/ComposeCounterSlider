@@ -19,8 +19,7 @@ dependencyResolutionManagement {
 }
 ```
 
-- Update your module level `build.gradle` file with the following dependency.
-  Check latest version on the [tags page](https://github.com/mdrlzy/ComposeCounterSlider/tags)
+- Update your module level `build.gradle`. Check latest version on the [tags page](https://github.com/mdrlzy/ComposeCounterSlider/tags)
 ```
 dependencies {
     implementation 'com.github.mdrlzy:ComposeCounterSlider:$version'
