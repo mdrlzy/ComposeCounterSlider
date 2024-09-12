@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    `maven-publish`
 }
 
 android {
@@ -36,6 +37,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.4"
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
 
 dependencies {
@@ -50,4 +56,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            groupId = "com.mdrlzy"
+            artifactId = "counterslider"
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
 }
