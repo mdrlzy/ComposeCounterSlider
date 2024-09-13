@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import com.mdrlzy.counterslider.customization.CounterSliderColors
 import com.mdrlzy.counterslider.customization.CounterSliderCustomization
 import com.mdrlzy.counterslider.vertical.VerticalDraggableThumbButton
@@ -21,7 +22,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun VerticalCounterSlider(
     modifier: Modifier = Modifier,
-    size: DpSize,
+    size: DpSize = DpSize(80.dp, 200.dp),
     customization: CounterSliderCustomization = CounterSliderCustomization(),
     colors: CounterSliderColors = CounterSliderColors(),
     allowLeftToReset: Boolean = true,
